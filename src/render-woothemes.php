@@ -11,39 +11,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * The version of Render.
  *
- * @since 1.0.0
+ * @since 0.1.0
  */
-define( 'RENDER_EDD_VERSION', '1.0.0' );
+define( 'RENDER_WOOTHEMES_VERSION', '0.1.0' );
 
 /**
  * The absolute server path to Render's root directory.
  *
- * @since 1.0.0
+ * @since 0.1.0
  */
-define( 'RENDER_EDD_PATH', plugin_dir_path( __FILE__ ) );
+define( 'RENDER_WOOTHEMES_PATH', plugin_dir_path( __FILE__ ) );
 
 /**
  * The URI to Render's root directory.
  *
- * @since 1.0.0
+ * @since 0.1.0
  */
-define( 'RENDER_EDD_URL', plugins_url( '', __FILE__ ) );
+define( 'RENDER_WOOTHEMES_URL', plugins_url( '', __FILE__ ) );
 
 /**
- * Class Render_EDD
+ * Class Render_Woothemes
  *
  * Initializes and loads the plugin.
  *
  * @since   0.1.0
  *
- * @package Render_EDD
+ * @package Render_Woothemes
  */
-class Render_EDD {
+class Render_Woothemes {
 
 	/**
 	 * The reason for deactivation.
 	 *
-	 * @since 1.0.0
+	 * @since 0.1.0
 	 *
 	 * @var array
 	 */
@@ -52,11 +52,11 @@ class Render_EDD {
 	/**
 	 * The plugin text domain.
 	 *
-	 * @since 1.0.0
+	 * @since 0.1.0
 	 *
 	 * @var string
 	 */
-	public static $text_domain = 'Render_EDD';
+	public static $text_domain = 'Render_Woothemes';
 
 	/**
 	 * Constructs the plugin.
@@ -80,16 +80,16 @@ class Render_EDD {
 			$this->deactivate_reasons[] = __( 'Render is not active', self::$text_domain );
 		}
 
-		// Requires Project Panorama
-		if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
-			$this->deactivate_reasons[] = __( 'Easy Digital Downloads is not active', self::$text_domain );
+		// Requires Woothemes
+		if ( ! class_exists( 'WF' ) ) {
+			$this->deactivate_reasons[] = __( 'A Woothemes theme is not active', self::$text_domain );
 		}
 
-		// 1.0.3 is when extension integration was introduced
-		if ( defined( 'RENDER_VERSION' ) && version_compare( RENDER_VERSION, '1.0.0', '<' ) ) {
+		// 0.1.3 is when extension integration was introduced
+		if ( defined( 'RENDER_VERSION' ) && version_compare( RENDER_VERSION, '0.1.0', '<' ) ) {
 			$this->deactivate_reasons[] = sprintf(
 				__( 'This plugin requires at least Render version %s. You have version %s installed.', self::$text_domain ),
-				'1.0.3',
+				'0.1.3',
 				RENDER_VERSION
 			);
 		}
@@ -105,24 +105,22 @@ class Render_EDD {
 		$this->_add_shortcodes();
 
 		// Translation ready
-		load_plugin_textdomain( 'Render_EDD', false, RENDER_EDD_PATH . '/languages' );
+		load_plugin_textdomain( 'Render_Woothemes', false, RENDER_WOOTHEMES_PATH . '/languages' );
 
-		// Add EDD styles to tinymce
-		add_filter( 'render_editor_styles', array( __CLASS__, '_add_edd_style' ) );
-		add_filter( 'render_editor_styles', array( __CLASS__, '_add_render_edd_style' ) );
+		// Add Woothemes styles to tinymce
+		// TODO add theme's style sheets to editor
+		//add_filter( 'render_editor_styles', array( __CLASS__, '_add_edd_style' ) );
+		//add_filter( 'render_editor_styles', array( __CLASS__, '_add_render_edd_style' ) );
 
 		// Licensing
-		render_setup_license( 'render_edd', 'Easy Digital Downloads', RENDER_EDD_VERSION, __FILE__ );
+		render_setup_license( 'render_woothemes', 'Woothemes', RENDER_WOOTHEMES_VERSION, __FILE__ );
 
 		// Remove media button
 		render_disable_tinymce_media_button( 'edd_media_button', 'Insert Download', 11 );
 	}
 
 	/**
-	 * Adds the EDD stylesheet to the TinyMCE.
-	 *
-	 * EDD doesn't register the stylesheet, so I can't grab it that way, but Pippin mentioned I can just call the
-	 * function to enqueue the style, grab the stylesheet, and then dequeue it pretty easily.
+	 * Adds the Woothemes stylesheet to the TinyMCE.
 	 *
 	 * @since  0.1.0
 	 * @access private
@@ -134,19 +132,15 @@ class Render_EDD {
 
 		global $wp_styles;
 
-		edd_register_styles();
-
 		if ( isset( $wp_styles->registered['edd-styles'] ) ) {
 			$styles[] = $wp_styles->registered['edd-styles']->src;
 		}
-
-		wp_dequeue_style( 'edd-styles' );
 
 		return $styles;
 	}
 
 	/**
-	 * Adds the Render EDD stylesheet to the TinyMCE through Render.
+	 * Adds the Render Woothemes stylesheet to the TinyMCE through Render.
 	 *
 	 * @since  0.1.0
 	 * @access private
@@ -155,14 +149,14 @@ class Render_EDD {
 	 * @return array The styles.
 	 */
 	public static function _add_render_edd_style( $styles ) {
-
-		$styles[] = RENDER_EDD_URL . "/assets/css/render-edd.min.css";
+		// TODO add the theme's stylesheets
+		//$styles[] = RENDER_WOOTHEMES_URL . "/assets/css/render-edd.min.css";
 
 		return $styles;
 	}
 
 	/**
-	 * Add data and inputs for all EDD shortcodes and pass them through Render's function.
+	 * Add data and inputs for all Woothemes shortcodes and pass them through Render's function.
 	 *
 	 * @since 0.1.0
 	 */
@@ -231,7 +225,7 @@ class Render_EDD {
 				array(
 					'code'        => 'edd_profile_editor',
 					'function'    => 'edd_profile_editor_shortcode',
-					'title'       => __( 'EDD Profile Editor', self::$text_domain ),
+					'title'       => __( 'Woothemes Profile Editor', self::$text_domain ),
 					'description' => __( 'Presents users with a form for updating their profile.', self::$text_domain ),
 					'tags'        => 'edd ecommerce downloads digital user profile account',
 					'render'      => array(
@@ -242,7 +236,7 @@ class Render_EDD {
 				array(
 					'code'        => 'edd_login',
 					'function'    => 'edd_login_form_shortcode',
-					'title'       => __( 'EDD Login', self::$text_domain ),
+					'title'       => __( 'Woothemes Login', self::$text_domain ),
 					'description' => __( 'Displays a simple login form for non-logged in users.', self::$text_domain ),
 					'tags'        => 'edd ecommerce downloads login users form',
 					'atts'        => array(
@@ -269,7 +263,7 @@ class Render_EDD {
 				array(
 					'code'        => 'edd_register',
 					'function'    => 'edd_register_form_shortcode',
-					'title'       => __( 'EDD Register', self::$text_domain ),
+					'title'       => __( 'Woothemes Register', self::$text_domain ),
 					'description' => __( 'Displays a registration form for non-logged in users.', self::$text_domain ),
 					'tags'        => 'edd ecommerce downloads login users form register signup',
 					'atts'        => array(
@@ -732,7 +726,7 @@ class Render_EDD {
 	}
 
 	/**
-	 * Display a notice in the admin if EDD and Render are not both active.
+	 * Display a notice in the admin if Woothemes and Render are not both active.
 	 *
 	 * @since  0.1.0
 	 * @access private
@@ -741,7 +735,7 @@ class Render_EDD {
 		?>
 		<div class="error">
 			<p>
-				<?php _e( 'Render Easy Digital Downloads is not active due to the following errors:', self::$text_domain ); ?>
+				<?php _e( 'Render Woothemes is not active due to the following errors:', self::$text_domain ); ?>
 			</p>
 
 			<ul>
@@ -756,49 +750,4 @@ class Render_EDD {
 	}
 }
 
-$render_edd = new Render_EDD();
-
-/**
- * TinyMCE callback for the EDD Login Form shortcode.
- *
- * Logs out the user before calling the original shortcode callback.
- *
- * @since  0.1.0
- * @access Private
- *
- * @param array  $atts    The attributes sent to the shortcode.
- * @param string $content The content inside the shortcode.
- * @return string Shortcode output,
- */
-function edd_login_form_shortcode_tinymce( $atts = array(), $content = '' ) {
-
-	// Log out for displaying this shortcode
-	render_tinyme_log_out();
-
-	$output = edd_login_form_shortcode( $atts, $content );
-
-	return $output;
-}
-
-/**
- * TinyMCE callback for the EDD Register Form shortcode.
- *
- * Logs out the user before calling the original shortcode callback.
- *
- * @since  0.1.0
- *
- * @access Private
- *
- * @param array  $atts    The attributes sent to the shortcode.
- * @param string $content The content inside the shortcode.
- * @return string Shortcode output.
- */
-function edd_register_form_shortcode_tinymce( $atts = array(), $content = '' ) {
-
-	// Log out for displaying this shortcode
-	render_tinyme_log_out();
-
-	$output = edd_register_form_shortcode( $atts, $content );
-
-	return $output;
-}
+$render_edd = new Render_Woothemes();
