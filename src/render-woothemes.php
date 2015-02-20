@@ -27,7 +27,7 @@ define( 'RENDER_WOOTHEMES_PATH', plugin_dir_path( __FILE__ ) );
  *
  * @since 0.1.0
  */
-define( 'RENDER_WOOTHEMES_URL', plugins_url( '', __FILE__ ) );
+define( 'RENDER_WOOTHEMES_URL', get_template_directory_uri() );
 
 /**
  * Class Render_Woothemes
@@ -109,14 +109,14 @@ class Render_Woothemes {
 
 		// Add Woothemes styles to tinymce
 		// TODO add theme's style sheets to editor
-		//add_filter( 'render_editor_styles', array( __CLASS__, '_add_edd_style' ) );
+		add_filter( 'render_editor_styles', array( __CLASS__, '_add_woo_style' ) );
 		//add_filter( 'render_editor_styles', array( __CLASS__, '_add_render_edd_style' ) );
 
 		// Licensing
 		render_setup_license( 'render_woothemes', 'Woothemes', RENDER_WOOTHEMES_VERSION, __FILE__ );
 
 		// Remove media button
-		render_disable_tinymce_media_button( 'edd_media_button', 'Insert Download', 11 );
+		render_disable_tinymce_button( 'woothemes_shortcodes_button', 'Woothemes Shortcodes', 11 );
 	}
 
 	/**
@@ -126,15 +126,16 @@ class Render_Woothemes {
 	 * @access private
 	 *
 	 * @param array $styles All stylesheets registered for the TinyMCE through Render.
+	 *
 	 * @return array The styles.
 	 */
-	public static function _add_edd_style( $styles ) {
+	public static function _add_woo_style( $styles ) {
 
 		global $wp_styles;
 
-		if ( isset( $wp_styles->registered['edd-styles'] ) ) {
-			$styles[] = $wp_styles->registered['edd-styles']->src;
-		}
+		$styles[] = RENDER_WOOTHEMES_URL . "/style.css";
+		$styles[] = RENDER_WOOTHEMES_URL . "/functions/css/shortcodes.css";
+		$styles[] = RENDER_WOOTHEMES_URL . "/functions/css/shortcode-icon.css";
 
 		return $styles;
 	}
@@ -146,6 +147,7 @@ class Render_Woothemes {
 	 * @access private
 	 *
 	 * @param array $styles All stylesheets registered for the TinyMCE through Render.
+	 *
 	 * @return array The styles.
 	 */
 	public static function _add_render_edd_style( $styles ) {
@@ -162,559 +164,839 @@ class Render_Woothemes {
 	 */
 	private function _add_shortcodes() {
 
-		global $edd_options;
-
 		foreach (
 			array(
-				// Download Cart
+				// box
 				array(
-					'code'        => 'download_cart',
-					'function'    => 'edd_cart_shortcode',
-					'title'       => __( 'Download Cart', self::$text_domain ),
-					'description' => __( 'Lists items in cart.', self::$text_domain ),
-					'tags'        => 'cart edd ecommerce downloads digital products',
-					'render'      => array(
-						'displayBlock' => true,
-					),
-				),
-				// Download Checkout
-				array(
-					'code'        => 'download_checkout',
-					'function'    => 'edd_checkout_form_shortcode',
-					'title'       => __( 'Download Checkout', self::$text_domain ),
-					'description' => __( 'Displays the checkout form.', self::$text_domain ),
-					'tags'        => 'cart edd ecommerce downloads digital products form',
-					'render'      => array(
-						'displayBlock' => true,
-					),
-				),
-				// Download History
-				array(
-					'code'        => 'download_history',
-					'function'    => 'edd_download_history',
-					'title'       => __( 'Download History', self::$text_domain ),
-					'description' => __( 'Displays all the products a user has purchased with links to the files.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads digital products history files purchase',
-					'render'      => array(
-						'displayBlock' => true,
-					),
-				),
-				// Purchase History
-				array(
-					'code'        => 'purchase_history',
-					'function'    => 'edd_purchase_history',
-					'title'       => __( 'Purchase History', self::$text_domain ),
-					'description' => __( 'Displays the complete purchase history for a user.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads digital products history purchase',
-					'render'      => array(
-						'displayBlock' => true,
-					),
-				),
-				// Download Discounts
-				array(
-					'code'        => 'download_discounts',
-					'function'    => 'edd_discounts_shortcode',
-					'title'       => __( 'Download Discounts', self::$text_domain ),
-					'description' => __( 'Lists all the currently available discount codes on your site.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads digital products coupon discount code',
-					'render'      => array(
-						'displayBlock' => true,
-					),
-				),
-				// Profile Editor
-				array(
-					'code'        => 'edd_profile_editor',
-					'function'    => 'edd_profile_editor_shortcode',
-					'title'       => __( 'Woothemes Profile Editor', self::$text_domain ),
-					'description' => __( 'Presents users with a form for updating their profile.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads digital user profile account',
-					'render'      => array(
-						'displayBlock' => true,
-					),
-				),
-				// Login
-				array(
-					'code'        => 'edd_login',
-					'function'    => 'edd_login_form_shortcode',
-					'title'       => __( 'Woothemes Login', self::$text_domain ),
-					'description' => __( 'Displays a simple login form for non-logged in users.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads login users form',
+					'code'        => 'box',
+					'function'    => 'woo_shortcode_box',
+					'title'       => __( 'Box', self::$text_domain ),
+					'description' => __( 'Displays your content in a nice box.', self::$text_domain ),
+					'tags'        => 'woothemes',
 					'atts'        => array(
-						'redirect' => array(
-							'label'       => __( 'Redirect', self::$text_domain ),
-							'description' => __( 'Redirect to this page after login.', self::$text_domain ),
-							'type'        => 'selectbox',
-							'properties'  => array(
-								'allowCustomInput' => true,
-								'groups'           => array(),
-								'callback'         => array(
-									'groups'   => true,
-									'function' => 'render_sc_post_list',
-								),
-								'placeholder'      => __( 'Same page', self::$text_domain ),
-							),
-						),
-					),
-					'render'      => array(
-						'displayBlock' => true,
-					),
-				),
-				// Register
-				array(
-					'code'        => 'edd_register',
-					'function'    => 'edd_register_form_shortcode',
-					'title'       => __( 'Woothemes Register', self::$text_domain ),
-					'description' => __( 'Displays a registration form for non-logged in users.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads login users form register signup',
-					'atts'        => array(
-						'redirect' => array(
-							'label'       => __( 'Redirect', self::$text_domain ),
-							'description' => __( 'Redirect to this page after login.', self::$text_domain ),
-							'type'        => 'selectbox',
-							'properties'  => array(
-								'allowCustomInput' => true,
-								'groups'           => array(),
-								'callback'         => array(
-									'groups'   => true,
-									'function' => 'render_sc_post_list',
-								),
-								'placeholder'      => __( 'Same page', self::$text_domain ),
-							),
-						),
-					),
-					'render'      => array(
-						'displayBlock' => true,
-					),
-				),
-				// Price
-				array(
-					'code'        => 'edd_price',
-					'function'    => 'edd_download_price_shortcode',
-					'title'       => __( 'Download Price', self::$text_domain ),
-					'description' => __( 'Displays the price of a specific download.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads product price',
-					'atts'        => array(
-						'id'       => render_sc_attr_template( 'post_list', array(
-							'required'   => true,
+						'type'   => array(
+							'label'      => __( 'Type', 'Render_Woothemes' ),
+							'type'       => 'selectbox',
 							'properties' => array(
-								'no_options'  => __( 'No downloads available', self::$text_domain ),
-								'placeholder' => __( 'Select a download', self::$text_domain ),
+								'options' => array(
+									'info'     => __( 'Info', 'Render_Woothemes' ),
+									'alert'    => __( 'Alert', 'Render_Woothemes' ),
+									'tick'     => __( 'Tick', 'Render_Woothemes' ),
+									'download' => __( 'Download', 'Render_Woothemes' ),
+									'note'     => __( 'Note', 'Render_Woothemes' ),
+								),
 							),
-						), array(
-							'post_type' => 'download',
-						) ),
-						'price_id' => array(
-							'label'       => __( 'Price ID', self::$text_domain ),
-							'description' => __( 'Optional. For variable pricing.', self::$text_domain ),
+						),
+						'size'   => array(
+							'label'      => __( 'Size', 'Render_Woothemes' ),
+							'type'       => 'toggle',
+							'properties' => array(
+								'values' => array(
+									'medium' => __( 'Medium', 'Render_Woothemes' ),
+									'large'  => __( 'Large', 'Render_Woothemes' ),
+								),
+							),
+						),
+						'style'  => array(
+							'label'      => __( 'Corners', 'Render_Woothemes' ),
+							'type'       => 'toggle',
+							'properties' => array(
+								'values' => array(
+									''        => __( 'Square', 'Render_Woothemes' ),
+									'rounded' => __( 'Rounded', 'Render_Woothemes' ),
+								),
+							),
+						),
+						'border' => array(
+							'label'      => __( 'Border', 'Render_Woothemes' ),
+							'type'       => 'toggle',
+							'properties' => array(
+								'values' => array(
+									'none' => __( 'None', 'Render_Woothemes' ),
+									'full' => __( 'Full', 'Render_Woothemes' ),
+								),
+							),
+						),
+						'icon'   => array(
+							'label' => __( 'Icon (URL)', 'Render_Woothemes' ),
+						),
+					),
+					'wrapping'    => true,
+					'render'      => array(
+						'noStyle' => true,
+					),
+				),
+				// button
+				array(
+					'code'        => 'button',
+					'function'    => 'woo_shortcode_button',
+					'title'       => __( 'Button', self::$text_domain ),
+					'description' => __( 'Displays a button.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(
+						'size'   => array(
+							'label'      => __( 'Size', 'Render_Woothemes' ),
+							'type'       => 'selectbox',
+							'properties' => array(
+								'options' => array(
+									'small'  => __( 'Small', 'Render_Woothemes' ),
+									'medium' => __( 'Medium', 'Render_Woothemes' ),
+									'large'  => __( 'Large', 'Render_Woothemes' ),
+									'xl'     => __( 'Extra Large', 'Render_Woothemes' ),
+								),
+							),
+						),
+						'style'  => array(
+							'label'      => __( 'Style', 'Render_Woothemes' ),
+							'type'       => 'selectbox',
+							'properties' => array(
+								'options' => array(
+									'info'     => __( 'Info', 'Render_Woothemes' ),
+									'alert'    => __( 'Alert', 'Render_Woothemes' ),
+									'tick'     => __( 'Tick', 'Render_Woothemes' ),
+									'download' => __( 'Download', 'Render_Woothemes' ),
+									'note'     => __( 'Note', 'Render_Woothemes' ),
+								),
+							),
+						),
+						'color'  => array(
+							'label'   => __( 'Color', 'Render' ),
+							'type'    => 'colorpicker',
+							'default' => RENDER_PRIMARY_COLOR,
+						),
+						'border' => array(
+							'label'   => __( 'Border', 'Render' ),
+							'type'    => 'colorpicker',
+							'default' => RENDER_PRIMARY_COLOR_DARK,
+						),
+						'text'   => array(
+							'label'      => __( 'Dark or light text?', 'Render_Woothemes' ),
+							'type'       => 'toggle',
+							'properties' => array(
+								'values' => array(
+									''     => __( 'Light', 'Render_Woothemes' ),
+									'dark' => __( 'Dark', 'Render_Woothemes' ),
+								),
+							),
+						),
+						'class'  => array(
+							'label' => __( 'Custom CSS class', 'Render_Woothemes' ),
+						),
+						'link'   => render_sc_attr_template( 'link' ),
+						'window' => array(
+							'label'      => __( 'Target', 'Render' ),
+							'type'       => 'checkbox',
+							'properties' => array(
+								'label' => __( 'Open link in new window?', 'Render' ),
+							),
+						),
+					),
+					'wrapping'    => true,
+					'render'      => array(
+						'noStyle' => true,
+					),
+				),
+				// related_posts
+				array(
+					'code'        => 'related_posts',
+					'function'    => 'woo_shortcode_related_posts',
+					'title'       => __( 'Related_posts', self::$text_domain ),
+					'description' => __( 'Displays a related_posts.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(
+						'image' => array(
+							'label'       => __( 'Image', 'Render_Woothemes' ),
+							'type'        => 'slider',
+							'description' => __( 'If set to 0, no image will show.', 'Render_Woothemes' ),
+							'properties'  => array(
+								'value' => 0,
+								'max'   => 1000,
+							),
+						),
+						'limit' => array(
+							'label'       => __( 'Limit', 'Render_Woothemes' ),
+							'type'        => 'slider',
+							'description' => __( 'The number of posts to show.', 'Render_Woothemes' ),
+							'properties'  => array(
+								'value' => 5,
+								'max'   => 12,
+							),
 						),
 					),
 					'render'      => true,
 				),
-				// Receipt
+				// tweetmeme
 				array(
-					'code'        => 'edd_receipt',
-					'function'    => 'edd_receipt_shortcode',
-					'title'       => __( 'Download Receipt', self::$text_domain ),
-					'description' => __( 'Displays a the complete details of a completed purchase.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads purchase receipt confirmation order payment complete checkout',
-					'atts'        => array(
-						'error'       => array(
-							'label'      => __( 'Error Message', self::$text_domain ),
-							'properties' => array(
-								'placeholder' => __( 'Sorry, trouble retrieving payment receipt.', 'edd' ),
-							),
-						),
-						'price'       => array(
-							'label'      => __( 'Hide Price', self::$text_domain ),
-							'type'       => 'checkbox',
-							'properties' => array(
-								'value' => 0,
-							),
-						),
-						'discount'    => array(
-							'label'      => __( 'Hide Discounts', self::$text_domain ),
-							'type'       => 'checkbox',
-							'properties' => array(
-								'value' => 0,
-							),
-						),
-						'products'    => array(
-							'label'      => __( 'Hide Products', self::$text_domain ),
-							'type'       => 'checkbox',
-							'properties' => array(
-								'value' => 0,
-							),
-						),
-						'date'        => array(
-							'label'      => __( 'Hide Purchase Date', self::$text_domain ),
-							'type'       => 'checkbox',
-							'properties' => array(
-								'value' => 0,
-							),
-						),
-						'payment_key' => array(
-							'label'      => __( 'Hide Payment Key', self::$text_domain ),
-							'type'       => 'checkbox',
-							'properties' => array(
-								'value' => 0,
-							),
-						),
-						'payment_id'  => array(
-							'label'      => __( 'Hide Order Number', self::$text_domain ),
-							'type'       => 'checkbox',
-							'properties' => array(
-								'value' => 0,
-							),
-						),
-					),
-					'render'      => array(
-						'displayBlock' => true,
-					),
+					'code'        => 'tweetmeme',
+					'function'    => 'woo_shortcode_tweetmeme',
+					'title'       => __( 'Tweetmeme', self::$text_domain ),
+					'description' => __( 'Displays a tweetmeme.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
 				),
-				// Purchase Link
+// twitter
 				array(
-					'code'        => 'purchase_link',
-					'function'    => 'edd_download_shortcode',
-					'title'       => __( 'Download Purchase Link', self::$text_domain ),
-					'description' => __( 'Displays a button which adds a specific product to the cart.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads purchase product buy button pay link checkout',
-					'atts'        => array(
-						'id'      => render_sc_attr_template( 'post_list', array(
-							'label'       => __( 'Downloads', self::$text_domain ),
-							'required'   => true,
-							'properties' => array(
-								'no_options'  => __( 'No downloads available', self::$text_domain ),
-								'placeholder' => __( 'Select a download', self::$text_domain ),
-							),
-						), array(
-							'post_type' => 'download',
-						) ),
-						'price'   => array(
-							'label'      => __( 'Hide Price', self::$text_domain ),
-							'type'       => 'checkbox',
-							'properties' => array(
-								'value' => 0,
-							),
-						),
-						'text'    => array(
-							'label'      => __( 'Link Text', self::$text_domain ),
-							'properties' => array(
-								'placeholder' => isset( $edd_options['add_to_cart_text'] ) && $edd_options['add_to_cart_text'] != '' ? $edd_options['add_to_cart_text'] : __( 'Purchase', 'edd' ),
-							),
-						),
-						array(
-							'type'  => 'section_break',
-							'label' => __( 'Style', self::$text_domain ),
-						),
-						'style'   => array(
-							'label'      => __( 'Style', self::$text_domain ),
-							'type'       => 'toggle',
-							'properties' => array(
-								'flip'   => isset( $edd_options['button_style'] ) && $edd_options['button_style'] == 'plain',
-								'values' => array(
-									'button' => __( 'Button', self::$text_domain ),
-									'plain'  => __( 'Text', self::$text_domain ),
-								),
-							),
-						),
-						'color'   => array(
-							'label'      => __( 'Button Color', self::$text_domain ),
-							'type'       => 'selectbox',
-							'default'    => isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
-							'properties' => array(
-								'options' => array(
-									'white'     => __( 'White', self::$text_domain ),
-									'gray'      => __( 'Gray', self::$text_domain ),
-									'blue'      => __( 'Blue', self::$text_domain ),
-									'red'       => __( 'Red', self::$text_domain ),
-									'green'     => __( 'Green', self::$text_domain ),
-									'yellow'    => __( 'Yellow', self::$text_domain ),
-									'orange'    => __( 'Orange', self::$text_domain ),
-									'dark gray' => __( 'Dark gray', self::$text_domain ),
-									'inherit'   => __( 'Inherit', self::$text_domain ),
-								),
-							),
-						),
-						'sku'     => array(
-							'label'       => __( 'SKU', self::$text_domain ),
-							'description' => __( 'Get download by SKU (overrides download set above)', self::$text_domain ),
-							'advanced'    => true,
-						),
-						'direct'  => array(
-							'label'      => __( 'Direct Purchase', self::$text_domain ),
-							'type'       => 'checkbox',
-							'properties' => array(
-								'label' => __( 'Send customer to directly to PayPal', self::$text_domain ),
-							),
-							'advanced'   => true,
-						),
-						'class'   => array(
-							'label'    => __( 'CSS Class', self::$text_domain ),
-							'default'  => 'edd-submit',
-							'advanced' => true,
-						),
-						'form_id' => array(
-							'label'    => __( 'Form ID', self::$text_domain ),
-							'default'  => '',
-							'advanced' => true,
-						),
-					),
-					'render'      => array(
-						'noStyle' => true,
-					),
+					'code'        => 'twitter',
+					'function'    => 'woo_shortcode_twitter',
+					'title'       => __( 'Twitter', self::$text_domain ),
+					'description' => __( 'Displays a twitter.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
 				),
-				// Purchase Collection
+// digg
 				array(
-					'code'        => 'purchase_collection',
-					'function'    => 'edd_purchase_collection_shortcode',
-					'title'       => __( 'Download Purchase Collection', self::$text_domain ),
-					'description' => __( 'Displays a button which adds all products in a specific taxonomy term to the cart.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads purchase product buy button pay link checkout',
-					'atts'        => array(
-						'taxonomy' => array(
-							'label'      => __( 'Taxonomy', self::$text_domain ),
-							'type'       => 'selectbox',
-							'required'   => true,
-							'properties' => array(
-								'options' => array(
-									'download_category' => __( 'Category', self::$text_domain ),
-									'download_tag'      => __( 'Tag', self::$text_domain ),
-								),
-							),
-						),
-						'terms'    => array(
-							'label'       => __( 'Terms', self::$text_domain ),
-							'required'    => true,
-							'description' => __( 'Enter a comma separated list of terms for the selected taxonomy.', self::$text_domain ),
-						),
-						'text'     => array(
-							'label'   => __( 'Link Text', self::$text_domain ),
-							'default' => __( 'Purchase All Items', 'edd' ),
-						),
-						array(
-							'type'  => 'section_break',
-							'label' => __( 'Style', self::$text_domain ),
-						),
-						'style'    => array(
-							'label'      => __( 'Style', self::$text_domain ),
-							'type'       => 'toggle',
-							'properties' => array(
-								'flip'   => isset( $edd_options['button_style'] ) && $edd_options['button_style'] == 'plain',
-								'values' => array(
-									'button' => __( 'Button', self::$text_domain ),
-									'plain'  => __( 'Text', self::$text_domain ),
-								),
-							),
-						),
-						'color'    => array(
-							'label'      => __( 'Button Color', self::$text_domain ),
-							'type'       => 'selectbox',
-							'default'    => isset( $edd_options['checkout_color'] ) ? $edd_options['checkout_color'] : 'blue',
-							'properties' => array(
-								'options' => array(
-									'gray'      => __( 'Gray', self::$text_domain ),
-									'blue'      => __( 'Blue', self::$text_domain ),
-									'green'     => __( 'Green', self::$text_domain ),
-									'dark gray' => __( 'Dark gray', self::$text_domain ),
-									'yellow'    => __( 'Yellow', self::$text_domain ),
-								),
-							),
-						),
-						'class'    => array(
-							'label'    => __( 'CSS Class', self::$text_domain ),
-							'default'  => 'edd-submit',
-							'advanced' => true,
-						),
-					),
-					'render'      => array(
-						'noStyle' => true,
-					),
+					'code'        => 'digg',
+					'function'    => 'woo_shortcode_digg',
+					'title'       => __( 'Digg', self::$text_domain ),
+					'description' => __( 'Displays a digg.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
 				),
-				// Downloads
+// fblike
 				array(
-					'code'        => 'downloads',
-					'function'    => 'edd_downloads_query',
-					'title'       => __( 'Downloads', self::$text_domain ),
-					'description' => __( 'Outputs a list or grid of downloadable products.', self::$text_domain ),
-					'tags'        => 'edd ecommerce downloads purchase product list',
-					'atts'        => array(
-						array(
-							'type'  => 'section_break',
-							'label' => __( 'Downloads', self::$text_domain ),
-						),
-						'category'         => render_sc_attr_template( 'terms_list', array(
-							'label'      => __( 'Categories', self::$text_domain ),
-							'properties' => array(
-								'placeholder' => __( 'Download category', self::$text_domain ),
-								'multi'       => true,
-							),
-						), array(
-							'taxonomies' => array( 'download_category' ),
-						) ),
-						'tags'             => render_sc_attr_template( 'terms_list', array(
-							'label'      => __( 'Tags', self::$text_domain ),
-							'properties' => array(
-								'placeholder' => __( 'Download tag', self::$text_domain ),
-								'multi'       => true,
-							),
-						), array(
-							'taxonomies' => array( 'download_tag' ),
-						) ),
-						'relation'         => array(
-							'label'       => __( 'Relation', self::$text_domain ),
-							'description' => __( 'Downloads must be in ALL categories / tags, or at least just one.', self::$text_domain ),
-							'type'        => 'toggle',
-							'properties'  => array(
-								'values' => array(
-									'AND' => __( 'All', self::$text_domain ) . '&nbsp;',
-									// For spacing in the toggle switch
-									'OR'  => __( 'One', self::$text_domain ),
-								),
-							),
-						),
-						'exclude_category' => render_sc_attr_template( 'terms_list', array(
-							'label'      => __( 'Exclude Categories', self::$text_domain ),
-							'properties' => array(
-								'placeholder' => __( 'Download category', self::$text_domain ),
-								'multi'       => true,
-							),
-						), array(
-							'taxonomies' => array( 'download_category' ),
-						) ),
-						'exclude_tags'     => render_sc_attr_template( 'terms_list', array(
-							'label'      => __( 'Exclude Tags', self::$text_domain ),
-							'properties' => array(
-								'placeholder' => __( 'Download tag', self::$text_domain ),
-								'multi'       => true,
-							),
-						), array(
-							'taxonomies' => array( 'download_tag' ),
-						) ),
-						'number'           => array(
-							'label'      => __( 'Download Count', self::$text_domain ),
-							'type'       => 'counter',
-							'default'    => 9,
-							'properties' => array(
-								'min' => 1,
-								'max' => 50,
-							),
-						),
-						'ids'              => render_sc_attr_template( 'post_list', array(
-							'label'       => __( 'Downloads', self::$text_domain ),
-							'description' => __( 'Enter one or more downloads to use ONLY these downloads.', self::$text_domain ),
-							'properties'  => array(
-								'no_options'  => __( 'No downloads available', self::$text_domain ),
-								'placeholder' => __( 'Select a download', self::$text_domain ),
-								'multi'       => true,
-							),
-						), array(
-							'post_type' => 'download',
-						) ),
-						'orderby'          => array(
-							'label'      => __( 'Order By', self::$text_domain ),
-							'type'       => 'selectbox',
-							'default'    => 'post_date',
-							'properties' => array(
-								'options' => array(
-									'price'     => __( 'Price', self::$text_domain ),
-									'id'        => __( 'ID', self::$text_domain ),
-									'random'    => __( 'Random', self::$text_domain ),
-									'post_date' => __( 'Published date', self::$text_domain ),
-									'title'     => __( 'Title', self::$text_domain ),
-								),
-							),
-						),
-						'order'            => array(
-							'label'      => __( 'Order', self::$text_domain ),
-							'type'       => 'toggle',
-							'properties' => array(
-								'values' => array(
-									'DESC' => __( 'Descending', self::$text_domain ),
-									'ASC'  => __( 'Ascending', self::$text_domain ),
-								),
-							),
-						),
-						array(
-							'type'  => 'section_break',
-							'label' => __( 'Visibility', self::$text_domain ),
-						),
-						'price'            => array(
-							'label'      => __( 'Price', self::$text_domain ),
-							'type'       => 'toggle',
-							'properties' => array(
-								'deselectStyle' => true,
-								'values'        => array(
-									'no'  => __( 'Hide', self::$text_domain ),
-									'yes' => __( 'Show', self::$text_domain ),
-								),
-							),
-						),
-						'excerpt'          => array(
-							'label'      => __( 'Excerpt', self::$text_domain ),
-							'type'       => 'toggle',
-							'properties' => array(
-								'flip'          => true,
-								'deselectStyle' => true,
-								'values'        => array(
-									'no'  => __( 'Hide', self::$text_domain ),
-									'yes' => __( 'Show', self::$text_domain ),
-								),
-							),
-						),
-						'full_content'     => array(
-							'label'      => __( 'Full Content', self::$text_domain ),
-							'type'       => 'toggle',
-							'properties' => array(
-								'deselectStyle' => true,
-								'values'        => array(
-									'no'  => __( 'Hide', self::$text_domain ),
-									'yes' => __( 'Show', self::$text_domain ),
-								),
-							),
-						),
-						'buy_button'       => array(
-							'label'      => __( 'Buy Button', self::$text_domain ),
-							'type'       => 'toggle',
-							'properties' => array(
-								'flip'          => true,
-								'deselectStyle' => true,
-								'values'        => array(
-									'no'  => __( 'Hide', self::$text_domain ),
-									'yes' => __( 'Show', self::$text_domain ),
-								),
-							),
-						),
-						'thumbnails'       => array(
-							'label'      => __( 'Thumbnails', self::$text_domain ),
-							'type'       => 'toggle',
-							'properties' => array(
-								'flip'          => true,
-								'deselectStyle' => true,
-								'values'        => array(
-									'false' => __( 'Hide', self::$text_domain ),
-									'true'  => __( 'Show', self::$text_domain ),
-								),
-							),
-						),
-						'columns'          => array(
-							'label'      => __( 'Columns', self::$text_domain ),
-							'type'       => 'counter',
-							'default'    => 3,
-							'properties' => array(
-								'min' => 0,
-								'max' => 6,
-							),
-						),
-					),
-					'render'      => array(
-						'displayBlock' => true,
-					)
+					'code'        => 'fblike',
+					'function'    => 'woo_shortcode_fblike',
+					'title'       => __( 'Fblike', self::$text_domain ),
+					'description' => __( 'Displays a fblike.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
 				),
+// twocol_one
+				array(
+					'code'        => 'twocol_one',
+					'function'    => 'woo_shortcode_twocol_one',
+					'title'       => __( 'Twocol_one', self::$text_domain ),
+					'description' => __( 'Displays a twocol_one.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// twocol_one_last
+				array(
+					'code'        => 'twocol_one_last',
+					'function'    => 'woo_shortcode_twocol_one_last',
+					'title'       => __( 'Twocol_one_last', self::$text_domain ),
+					'description' => __( 'Displays a twocol_one_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// threecol_one
+				array(
+					'code'        => 'threecol_one',
+					'function'    => 'woo_shortcode_threecol_one',
+					'title'       => __( 'Threecol_one', self::$text_domain ),
+					'description' => __( 'Displays a threecol_one.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// threecol_one_last
+				array(
+					'code'        => 'threecol_one_last',
+					'function'    => 'woo_shortcode_threecol_one_last',
+					'title'       => __( 'Threecol_one_last', self::$text_domain ),
+					'description' => __( 'Displays a threecol_one_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// threecol_two
+				array(
+					'code'        => 'threecol_two',
+					'function'    => 'woo_shortcode_threecol_two',
+					'title'       => __( 'Threecol_two', self::$text_domain ),
+					'description' => __( 'Displays a threecol_two.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// threecol_two_last
+				array(
+					'code'        => 'threecol_two_last',
+					'function'    => 'woo_shortcode_threecol_two_last',
+					'title'       => __( 'Threecol_two_last', self::$text_domain ),
+					'description' => __( 'Displays a threecol_two_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fourcol_one
+				array(
+					'code'        => 'fourcol_one',
+					'function'    => 'woo_shortcode_fourcol_one',
+					'title'       => __( 'Fourcol_one', self::$text_domain ),
+					'description' => __( 'Displays a fourcol_one.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fourcol_one_last
+				array(
+					'code'        => 'fourcol_one_last',
+					'function'    => 'woo_shortcode_fourcol_one_last',
+					'title'       => __( 'Fourcol_one_last', self::$text_domain ),
+					'description' => __( 'Displays a fourcol_one_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fourcol_two
+				array(
+					'code'        => 'fourcol_two',
+					'function'    => 'woo_shortcode_fourcol_two',
+					'title'       => __( 'Fourcol_two', self::$text_domain ),
+					'description' => __( 'Displays a fourcol_two.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fourcol_two_last
+				array(
+					'code'        => 'fourcol_two_last',
+					'function'    => 'woo_shortcode_fourcol_two_last',
+					'title'       => __( 'Fourcol_two_last', self::$text_domain ),
+					'description' => __( 'Displays a fourcol_two_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fourcol_three
+				array(
+					'code'        => 'fourcol_three',
+					'function'    => 'woo_shortcode_fourcol_three',
+					'title'       => __( 'Fourcol_three', self::$text_domain ),
+					'description' => __( 'Displays a fourcol_three.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fourcol_three_last
+				array(
+					'code'        => 'fourcol_three_last',
+					'function'    => 'woo_shortcode_fourcol_three_last',
+					'title'       => __( 'Fourcol_three_last', self::$text_domain ),
+					'description' => __( 'Displays a fourcol_three_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fivecol_one
+				array(
+					'code'        => 'fivecol_one',
+					'function'    => 'woo_shortcode_fivecol_one',
+					'title'       => __( 'Fivecol_one', self::$text_domain ),
+					'description' => __( 'Displays a fivecol_one.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fivecol_one_last
+				array(
+					'code'        => 'fivecol_one_last',
+					'function'    => 'woo_shortcode_fivecol_one_last',
+					'title'       => __( 'Fivecol_one_last', self::$text_domain ),
+					'description' => __( 'Displays a fivecol_one_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fivecol_two
+				array(
+					'code'        => 'fivecol_two',
+					'function'    => 'woo_shortcode_fivecol_two',
+					'title'       => __( 'Fivecol_two', self::$text_domain ),
+					'description' => __( 'Displays a fivecol_two.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fivecol_two_last
+				array(
+					'code'        => 'fivecol_two_last',
+					'function'    => 'woo_shortcode_fivecol_two_last',
+					'title'       => __( 'Fivecol_two_last', self::$text_domain ),
+					'description' => __( 'Displays a fivecol_two_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fivecol_three
+				array(
+					'code'        => 'fivecol_three',
+					'function'    => 'woo_shortcode_fivecol_three',
+					'title'       => __( 'Fivecol_three', self::$text_domain ),
+					'description' => __( 'Displays a fivecol_three.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fivecol_three_last
+				array(
+					'code'        => 'fivecol_three_last',
+					'function'    => 'woo_shortcode_fivecol_three_last',
+					'title'       => __( 'Fivecol_three_last', self::$text_domain ),
+					'description' => __( 'Displays a fivecol_three_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fivecol_four
+				array(
+					'code'        => 'fivecol_four',
+					'function'    => 'woo_shortcode_fivecol_four',
+					'title'       => __( 'Fivecol_four', self::$text_domain ),
+					'description' => __( 'Displays a fivecol_four.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fivecol_four_last
+				array(
+					'code'        => 'fivecol_four_last',
+					'function'    => 'woo_shortcode_fivecol_four_last',
+					'title'       => __( 'Fivecol_four_last', self::$text_domain ),
+					'description' => __( 'Displays a fivecol_four_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_one
+				array(
+					'code'        => 'sixcol_one',
+					'function'    => 'woo_shortcode_sixcol_one',
+					'title'       => __( 'Sixcol_one', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_one.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_one_last
+				array(
+					'code'        => 'sixcol_one_last',
+					'function'    => 'woo_shortcode_sixcol_one_last',
+					'title'       => __( 'Sixcol_one_last', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_one_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_two
+				array(
+					'code'        => 'sixcol_two',
+					'function'    => 'woo_shortcode_sixcol_two',
+					'title'       => __( 'Sixcol_two', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_two.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_two_last
+				array(
+					'code'        => 'sixcol_two_last',
+					'function'    => 'woo_shortcode_sixcol_two_last',
+					'title'       => __( 'Sixcol_two_last', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_two_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_three
+				array(
+					'code'        => 'sixcol_three',
+					'function'    => 'woo_shortcode_sixcol_three',
+					'title'       => __( 'Sixcol_three', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_three.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_three_last
+				array(
+					'code'        => 'sixcol_three_last',
+					'function'    => 'woo_shortcode_sixcol_three_last',
+					'title'       => __( 'Sixcol_three_last', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_three_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_four
+				array(
+					'code'        => 'sixcol_four',
+					'function'    => 'woo_shortcode_sixcol_four',
+					'title'       => __( 'Sixcol_four', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_four.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_four_last
+				array(
+					'code'        => 'sixcol_four_last',
+					'function'    => 'woo_shortcode_sixcol_four_last',
+					'title'       => __( 'Sixcol_four_last', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_four_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_five
+				array(
+					'code'        => 'sixcol_five',
+					'function'    => 'woo_shortcode_sixcol_five',
+					'title'       => __( 'Sixcol_five', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_five.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// sixcol_five_last
+				array(
+					'code'        => 'sixcol_five_last',
+					'function'    => 'woo_shortcode_sixcol_five_last',
+					'title'       => __( 'Sixcol_five_last', self::$text_domain ),
+					'description' => __( 'Displays a sixcol_five_last.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// hr
+				array(
+					'code'        => 'hr',
+					'function'    => 'woo_shortcode_hr',
+					'title'       => __( 'Hr', self::$text_domain ),
+					'description' => __( 'Displays a hr.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// divider
+				array(
+					'code'        => 'divider',
+					'function'    => 'woo_shortcode_divider',
+					'title'       => __( 'Divider', self::$text_domain ),
+					'description' => __( 'Displays a divider.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// divider_flat
+				array(
+					'code'        => 'divider_flat',
+					'function'    => 'woo_shortcode_divider_flat',
+					'title'       => __( 'Divider_flat', self::$text_domain ),
+					'description' => __( 'Displays a divider_flat.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// quote
+				array(
+					'code'        => 'quote',
+					'function'    => 'woo_shortcode_quote',
+					'title'       => __( 'Quote', self::$text_domain ),
+					'description' => __( 'Displays a quote.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// ilink
+				array(
+					'code'        => 'ilink',
+					'function'    => 'woo_shortcode_ilink',
+					'title'       => __( 'Ilink', self::$text_domain ),
+					'description' => __( 'Displays a ilink.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// toggle
+				array(
+					'code'        => 'toggle',
+					'function'    => 'woo_shortcode_toggle',
+					'title'       => __( 'Toggle', self::$text_domain ),
+					'description' => __( 'Displays a toggle.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// fbshare
+				array(
+					'code'        => 'fbshare',
+					'function'    => 'woo_shortcode_fbshare',
+					'title'       => __( 'Fbshare', self::$text_domain ),
+					'description' => __( 'Displays a fbshare.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// contact_form
+				array(
+					'code'        => 'contact_form',
+					'function'    => 'woo_shortcode_contactform',
+					'title'       => __( 'Contact_form', self::$text_domain ),
+					'description' => __( 'Displays a contact_form.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// tabs
+				array(
+					'code'        => 'tabs',
+					'function'    => 'woo_shortcode_tabs',
+					'title'       => __( 'Tabs', self::$text_domain ),
+					'description' => __( 'Displays a tabs.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// tab
+				array(
+					'code'        => 'tab',
+					'function'    => 'woo_shortcode_tab_single',
+					'title'       => __( 'Tab', self::$text_domain ),
+					'description' => __( 'Displays a tab.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// dropcap
+				array(
+					'code'        => 'dropcap',
+					'function'    => 'woo_shortcode_dropcap',
+					'title'       => __( 'Dropcap', self::$text_domain ),
+					'description' => __( 'Displays a dropcap.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// highlight
+				array(
+					'code'        => 'highlight',
+					'function'    => 'woo_shortcode_highlight',
+					'title'       => __( 'Highlight', self::$text_domain ),
+					'description' => __( 'Displays a highlight.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// abbr
+				array(
+					'code'        => 'abbr',
+					'function'    => 'woo_shortcode_abbreviation',
+					'title'       => __( 'Abbr', self::$text_domain ),
+					'description' => __( 'Displays a abbr.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// typography
+				array(
+					'code'        => 'typography',
+					'function'    => 'woo_shortcode_typography',
+					'title'       => __( 'Typography', self::$text_domain ),
+					'description' => __( 'Displays a typography.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// unordered_list
+				array(
+					'code'        => 'unordered_list',
+					'function'    => 'woo_shortcode_unorderedlist',
+					'title'       => __( 'Unordered_list', self::$text_domain ),
+					'description' => __( 'Displays a unordered_list.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// ordered_list
+				array(
+					'code'        => 'ordered_list',
+					'function'    => 'woo_shortcode_orderedlist',
+					'title'       => __( 'Ordered_list', self::$text_domain ),
+					'description' => __( 'Displays a ordered_list.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// social_icon
+				array(
+					'code'        => 'social_icon',
+					'function'    => 'woo_shortcode_socialicon',
+					'title'       => __( 'Social_icon', self::$text_domain ),
+					'description' => __( 'Displays a social_icon.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// linkedin_share
+				array(
+					'code'        => 'linkedin_share',
+					'function'    => 'woo_shortcode_linkedin_share',
+					'title'       => __( 'Linkedin_share', self::$text_domain ),
+					'description' => __( 'Displays a linkedin_share.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// google_plusone
+				array(
+					'code'        => 'google_plusone',
+					'function'    => 'woo_shortcode_google_plusone',
+					'title'       => __( 'Google_plusone', self::$text_domain ),
+					'description' => __( 'Displays a google_plusone.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// twitter_follow
+				array(
+					'code'        => 'twitter_follow',
+					'function'    => 'woo_shortcode_twitter_follow',
+					'title'       => __( 'Twitter_follow', self::$text_domain ),
+					'description' => __( 'Displays a twitter_follow.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// stumbleupon
+				array(
+					'code'        => 'stumbleupon',
+					'function'    => 'woo_shortcode_stumbleupon',
+					'title'       => __( 'Stumbleupon', self::$text_domain ),
+					'description' => __( 'Displays a stumbleupon.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// pinterest
+				array(
+					'code'        => 'pinterest',
+					'function'    => 'woo_shortcode_pinterest',
+					'title'       => __( 'Pinterest', self::$text_domain ),
+					'description' => __( 'Displays a pinterest.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// view_full_article
+				array(
+					'code'        => 'view_full_article',
+					'function'    => 'woo_shortcode_view_full_article',
+					'title'       => __( 'View_full_article', self::$text_domain ),
+					'description' => __( 'Displays a view_full_article.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// custom_field
+				array(
+					'code'        => 'custom_field',
+					'function'    => 'woo_shortcode_custom_field',
+					'title'       => __( 'Custom_field', self::$text_domain ),
+					'description' => __( 'Displays a custom_field.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// post_date
+				array(
+					'code'        => 'post_date',
+					'function'    => 'woo_shortcode_post_date',
+					'title'       => __( 'Post_date', self::$text_domain ),
+					'description' => __( 'Displays a post_date.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// post_time
+				array(
+					'code'        => 'post_time',
+					'function'    => 'woo_shortcode_post_time',
+					'title'       => __( 'Post_time', self::$text_domain ),
+					'description' => __( 'Displays a post_time.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// post_author
+				array(
+					'code'        => 'post_author',
+					'function'    => 'woo_shortcode_post_author',
+					'title'       => __( 'Post_author', self::$text_domain ),
+					'description' => __( 'Displays a post_author.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// post_author_link
+				array(
+					'code'        => 'post_author_link',
+					'function'    => 'woo_shortcode_post_author_link',
+					'title'       => __( 'Post_author_link', self::$text_domain ),
+					'description' => __( 'Displays a post_author_link.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// post_author_posts_link
+				array(
+					'code'        => 'post_author_posts_link',
+					'function'    => 'woo_shortcode_post_author_posts_link',
+					'title'       => __( 'Post_author_posts_link', self::$text_domain ),
+					'description' => __( 'Displays a post_author_posts_link.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// post_comments
+				array(
+					'code'        => 'post_comments',
+					'function'    => 'woo_shortcode_post_comments',
+					'title'       => __( 'Post_comments', self::$text_domain ),
+					'description' => __( 'Displays a post_comments.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// post_tags
+				array(
+					'code'        => 'post_tags',
+					'function'    => 'woo_shortcode_post_tags',
+					'title'       => __( 'Post_tags', self::$text_domain ),
+					'description' => __( 'Displays a post_tags.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// post_categories
+				array(
+					'code'        => 'post_categories',
+					'function'    => 'woo_shortcode_post_categories',
+					'title'       => __( 'Post_categories', self::$text_domain ),
+					'description' => __( 'Displays a post_categories.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// post_edit
+				array(
+					'code'        => 'post_edit',
+					'function'    => 'woo_shortcode_post_edit',
+					'title'       => __( 'Post_edit', self::$text_domain ),
+					'description' => __( 'Displays a post_edit.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// footer_backtotop
+				array(
+					'code'        => 'footer_backtotop',
+					'function'    => 'woo_shortcode_footer_backtotop',
+					'title'       => __( 'Footer_backtotop', self::$text_domain ),
+					'description' => __( 'Displays a footer_backtotop.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// footer_childtheme_link
+				array(
+					'code'        => 'footer_childtheme_link',
+					'function'    => 'woo_shortcode_footer_childtheme_link',
+					'title'       => __( 'Footer_childtheme_link', self::$text_domain ),
+					'description' => __( 'Displays a footer_childtheme_link.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// footer_wordpress_link
+				array(
+					'code'        => 'footer_wordpress_link',
+					'function'    => 'woo_shortcode_footer_wordpress_link',
+					'title'       => __( 'Footer_wordpress_link', self::$text_domain ),
+					'description' => __( 'Displays a footer_wordpress_link.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// footer_woothemes_link
+				array(
+					'code'        => 'footer_woothemes_link',
+					'function'    => 'woo_shortcode_footer_woothemes_link',
+					'title'       => __( 'Footer_woothemes_link', self::$text_domain ),
+					'description' => __( 'Displays a footer_woothemes_link.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// footer_loginout
+				array(
+					'code'        => 'footer_loginout',
+					'function'    => 'woo_shortcode_footer_loginout',
+					'title'       => __( 'Footer_loginout', self::$text_domain ),
+					'description' => __( 'Displays a footer_loginout.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// site_copyright
+				array(
+					'code'        => 'site_copyright',
+					'function'    => 'woo_shortcode_site_copyright',
+					'title'       => __( 'Site_copyright', self::$text_domain ),
+					'description' => __( 'Displays a site_copyright.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+// site_credit
+				array(
+					'code'        => 'site_credit',
+					'function'    => 'woo_shortcode_site_credit',
+					'title'       => __( 'Site_credit', self::$text_domain ),
+					'description' => __( 'Displays a site_credit.', self::$text_domain ),
+					'tags'        => 'woothemes',
+					'atts'        => array(),
+				),
+
 			) as $shortcode
 		) {
 
 			$shortcode['category'] = 'ecommerce';
-			$shortcode['source']   = 'Easy Digital Downloads';
+			$shortcode['source']   = 'Woothemes';
 
 			render_add_shortcode( $shortcode );
 			render_add_shortcode_category( array(
@@ -751,3 +1033,23 @@ class Render_Woothemes {
 }
 
 $render_edd = new Render_Woothemes();
+
+add_action( 'admin_notices', function () {
+	global $shortcode_tags;
+	//var_dump($shortcode_tags);
+//	echo "<ul>";
+//	foreach ( $shortcode_tags as $k => $s ) {
+//		echo '<li>// ' . $k;
+//		echo "<br/>array(<br/>
+//					'code'        => '" . $k . "',<br/>
+//					'function'    => '" . $s . "',<br/>
+//					'title'       => __( '" . ucfirst( $k ) . "', self::\$text_domain ),<br/>
+//					'description' => __( 'Displays a " . $k . ".', self::\$text_domain ),<br/>
+//					'tags'        => 'woothemes',<br/>
+//					'atts'        => array(<br/>
+//					),<br/>
+//					),";
+//		echo '</li>';
+//	}
+//	echo "</ul>";
+} );
