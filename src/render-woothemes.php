@@ -328,20 +328,60 @@ class Render_Woothemes {
 				// tweetmeme
 				array(
 					'code'        => 'tweetmeme',
-					'function'    => 'woo_shortcode_tweetmeme',
-					'title'       => __( 'Tweetmeme', self::$text_domain ),
-					'description' => __( 'Displays a tweetmeme.', self::$text_domain ),
-					'tags'        => 'woothemes',
-					'atts'        => array(),
+					// This service no longer exists so don't show it
+					'noDisplay' => true,
 				),
-// twitter
+				// twitter
 				array(
 					'code'        => 'twitter',
 					'function'    => 'woo_shortcode_twitter',
 					'title'       => __( 'Twitter', self::$text_domain ),
-					'description' => __( 'Displays a twitter.', self::$text_domain ),
+					'description' => __( 'Displays a tweet button for sharing on Twitter.', self::$text_domain ),
 					'tags'        => 'woothemes',
-					'atts'        => array(),
+					'atts'        => array(
+						'style'   => array(
+							'label' => __( 'Style', 'Render_Woothemes' ),
+							'type'       => 'selectbox',
+							'default' => 'horizontal',
+							'properties' => array(
+								'options' => array(
+									'horizontal'     => __( 'Horizontal', 'Render_Woothemes' ),
+									'vertical'    => __( 'Vertical', 'Render_Woothemes' ),
+									'none'     => __( 'None', 'Render_Woothemes' ),
+								),
+							),
+						),
+						'url'   => array(
+							'label' => __( 'URL', 'Render_Woothemes' ),
+							'description' => 'Optional specific link.',
+						),
+						'source'   => array(
+							'label' => __( 'Source', 'Render_Woothemes' ),
+							'description' => 'Optional specific username to include in tweet.',
+						),
+						'related'   => array(
+							'label' => __( 'Related', 'Render_Woothemes' ),
+						),
+						'hashtag'   => array(
+							'label' => __( 'Hashtag', 'Render_Woothemes' ),
+						),
+						'size'   => array(
+							'label' => __( 'Size', 'Render_Woothemes' ),
+						),
+						'text'   => array(
+							'label' => __( 'Text', 'Render_Woothemes' ),
+						),
+						'float'   => array(
+							'label' => __( 'Float', 'Render_Woothemes' ),
+						),
+						'lang'   => array(
+							'label' => __( 'Language', 'Render_Woothemes' ),
+						),
+						'use_post_url'   => array(
+							'label' => __( 'Use post URL?', 'Render_Woothemes' ),
+						),
+					),
+					'render'      => true,
 				),
 // digg
 				array(
@@ -351,6 +391,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a digg.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fblike
 				array(
@@ -360,6 +401,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fblike.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // twocol_one
 				array(
@@ -369,6 +411,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a twocol_one.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // twocol_one_last
 				array(
@@ -378,6 +421,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a twocol_one_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // threecol_one
 				array(
@@ -387,6 +431,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a threecol_one.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // threecol_one_last
 				array(
@@ -396,6 +441,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a threecol_one_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // threecol_two
 				array(
@@ -405,6 +451,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a threecol_two.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // threecol_two_last
 				array(
@@ -414,6 +461,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a threecol_two_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fourcol_one
 				array(
@@ -423,6 +471,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fourcol_one.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fourcol_one_last
 				array(
@@ -432,6 +481,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fourcol_one_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fourcol_two
 				array(
@@ -441,6 +491,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fourcol_two.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fourcol_two_last
 				array(
@@ -450,6 +501,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fourcol_two_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fourcol_three
 				array(
@@ -459,6 +511,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fourcol_three.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fourcol_three_last
 				array(
@@ -468,6 +521,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fourcol_three_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fivecol_one
 				array(
@@ -477,6 +531,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fivecol_one.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fivecol_one_last
 				array(
@@ -486,6 +541,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fivecol_one_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fivecol_two
 				array(
@@ -495,6 +551,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fivecol_two.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fivecol_two_last
 				array(
@@ -504,6 +561,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fivecol_two_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fivecol_three
 				array(
@@ -513,6 +571,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fivecol_three.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fivecol_three_last
 				array(
@@ -522,6 +581,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fivecol_three_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fivecol_four
 				array(
@@ -531,6 +591,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fivecol_four.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fivecol_four_last
 				array(
@@ -540,6 +601,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fivecol_four_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_one
 				array(
@@ -549,6 +611,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_one.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_one_last
 				array(
@@ -558,6 +621,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_one_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_two
 				array(
@@ -567,6 +631,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_two.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_two_last
 				array(
@@ -576,6 +641,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_two_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_three
 				array(
@@ -585,6 +651,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_three.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_three_last
 				array(
@@ -594,6 +661,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_three_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_four
 				array(
@@ -603,6 +671,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_four.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_four_last
 				array(
@@ -612,6 +681,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_four_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_five
 				array(
@@ -621,6 +691,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_five.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // sixcol_five_last
 				array(
@@ -630,6 +701,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a sixcol_five_last.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // hr
 				array(
@@ -639,6 +711,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a hr.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // divider
 				array(
@@ -648,6 +721,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a divider.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // divider_flat
 				array(
@@ -657,6 +731,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a divider_flat.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // quote
 				array(
@@ -666,6 +741,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a quote.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // ilink
 				array(
@@ -675,6 +751,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a ilink.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // toggle
 				array(
@@ -684,6 +761,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a toggle.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // fbshare
 				array(
@@ -693,6 +771,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a fbshare.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // contact_form
 				array(
@@ -702,6 +781,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a contact_form.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // tabs
 				array(
@@ -711,6 +791,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a tabs.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // tab
 				array(
@@ -720,6 +801,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a tab.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // dropcap
 				array(
@@ -729,6 +811,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a dropcap.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // highlight
 				array(
@@ -738,6 +821,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a highlight.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // abbr
 				array(
@@ -747,6 +831,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a abbr.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // typography
 				array(
@@ -756,6 +841,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a typography.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // unordered_list
 				array(
@@ -765,6 +851,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a unordered_list.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // ordered_list
 				array(
@@ -774,6 +861,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a ordered_list.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // social_icon
 				array(
@@ -783,6 +871,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a social_icon.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // linkedin_share
 				array(
@@ -792,6 +881,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a linkedin_share.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // google_plusone
 				array(
@@ -801,6 +891,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a google_plusone.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // twitter_follow
 				array(
@@ -810,6 +901,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a twitter_follow.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // stumbleupon
 				array(
@@ -819,6 +911,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a stumbleupon.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // pinterest
 				array(
@@ -828,6 +921,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a pinterest.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // view_full_article
 				array(
@@ -837,6 +931,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a view_full_article.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // custom_field
 				array(
@@ -846,6 +941,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a custom_field.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // post_date
 				array(
@@ -855,6 +951,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a post_date.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // post_time
 				array(
@@ -864,6 +961,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a post_time.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // post_author
 				array(
@@ -873,6 +971,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a post_author.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // post_author_link
 				array(
@@ -882,6 +981,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a post_author_link.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // post_author_posts_link
 				array(
@@ -891,6 +991,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a post_author_posts_link.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // post_comments
 				array(
@@ -900,6 +1001,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a post_comments.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // post_tags
 				array(
@@ -909,6 +1011,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a post_tags.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // post_categories
 				array(
@@ -918,6 +1021,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a post_categories.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // post_edit
 				array(
@@ -927,6 +1031,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a post_edit.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // footer_backtotop
 				array(
@@ -936,6 +1041,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a footer_backtotop.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // footer_childtheme_link
 				array(
@@ -945,6 +1051,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a footer_childtheme_link.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // footer_wordpress_link
 				array(
@@ -954,6 +1061,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a footer_wordpress_link.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // footer_woothemes_link
 				array(
@@ -963,6 +1071,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a footer_woothemes_link.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // footer_loginout
 				array(
@@ -972,6 +1081,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a footer_loginout.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // site_copyright
 				array(
@@ -981,6 +1091,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a site_copyright.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 // site_credit
 				array(
@@ -990,6 +1101,7 @@ class Render_Woothemes {
 					'description' => __( 'Displays a site_credit.', self::$text_domain ),
 					'tags'        => 'woothemes',
 					'atts'        => array(),
+					'render'      => true,
 				),
 
 			) as $shortcode
