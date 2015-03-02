@@ -361,24 +361,75 @@ class Render_Woothemes {
 						),
 						'related'   => array(
 							'label' => __( 'Related', 'Render_Woothemes' ),
+							'description' => 'Optional related Twitter account.',
 						),
 						'hashtag'   => array(
 							'label' => __( 'Hashtag', 'Render_Woothemes' ),
+							'description' => 'Optional hashtags to include in the tweet.',
 						),
 						'size'   => array(
 							'label' => __( 'Size', 'Render_Woothemes' ),
+							'type' => 'toggle',
+							'properties' => array(
+								'values' => array(
+									''     => __( 'Medium', 'Render_Woothemes' ),
+									'large' => __( 'Large', 'Render_Woothemes' ),
+								),
+							),
 						),
 						'text'   => array(
 							'label' => __( 'Text', 'Render_Woothemes' ),
+							'description' => 'Optional tweet text (default: title of page).',
 						),
 						'float'   => array(
 							'label' => __( 'Float', 'Render_Woothemes' ),
+							'type' => 'toggle',
+							'properties' => array(
+								'values' => array(
+									''     => __( 'Left', 'Render_Woothemes' ),
+									'right' => __( 'Right', 'Render_Woothemes' ),
+								),
+							),
 						),
 						'lang'   => array(
 							'label' => __( 'Language', 'Render_Woothemes' ),
+							'type'       => 'selectbox',
+							'default' => 'horizontal',
+							'properties' => array(
+								'options' => array(
+									''     => __( 'English', 'Render_Woothemes' ),
+									'fr'    => __( 'Vertical', 'Render_Woothemes' ),
+									'de'     => __( 'None', 'Render_Woothemes' ),
+									'es'    => __( 'Vertical', 'Render_Woothemes' ),
+									'js'     => __( 'None', 'Render_Woothemes' ),
+									'hi'    => __( 'Vertical', 'Render_Woothemes' ),
+									'zh-cn'     => __( 'None', 'Render_Woothemes' ),
+									'pt'    => __( 'Vertical', 'Render_Woothemes' ),
+									'id'     => __( 'None', 'Render_Woothemes' ),
+									'hu'    => __( 'Vertical', 'Render_Woothemes' ),
+									'it'     => __( 'None', 'Render_Woothemes' ),
+									'da'    => __( 'Vertical', 'Render_Woothemes' ),
+									'tr'     => __( 'None', 'Render_Woothemes' ),
+									'fil'    => __( 'Vertical', 'Render_Woothemes' ),
+									'ko'     => __( 'None', 'Render_Woothemes' ),
+									'sv'    => __( 'Vertical', 'Render_Woothemes' ),
+									'no'     => __( 'None', 'Render_Woothemes' ),
+									'zh-tw'    => __( 'Vertical', 'Render_Woothemes' ),
+									'nl'     => __( 'None', 'Render_Woothemes' ),
+									'ru'    => __( 'Vertical', 'Render_Woothemes' ),
+									'ja'     => __( 'None', 'Render_Woothemes' ),
+									'fi'    => __( 'Vertical', 'Render_Woothemes' ),
+									'msa'     => __( 'None', 'Render_Woothemes' ),
+									'pl'    => __( 'Vertical', 'Render_Woothemes' ),
+								),
+							),
 						),
 						'use_post_url'   => array(
 							'label' => __( 'Use post URL?', 'Render_Woothemes' ),
+							'type'       => 'checkbox',
+							'properties' => array(
+								'label' => __( 'Use post URL?', 'Render' ),
+							),
 						),
 					),
 					'render'      => true,
